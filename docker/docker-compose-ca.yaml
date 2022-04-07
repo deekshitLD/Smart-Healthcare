@@ -1,0 +1,105 @@
+#There are many CA Server products in the market.
+#The CA Server product is a server that provides a central authority for all the certificates issued by the CA.
+#Hyperledeger Fabric comes with Fabric-CA Server.
+#The whole process begins with bringing up the CA Server, runnung as a docker container.
+#We either use an existing CA Server or we create a new one.
+#In the example we are using a self-signed certificate, and then we generate all cryptographic material for the Fabric network.
+version: '2.2'
+
+
+networks:
+  healthcare-nw1:
+
+services:
+
+  ca_hospital:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.hospital
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=1010
+    ports:
+      - "1010:1010"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ../consortium/fabric-ca/hospital:/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      # - /var/madhu/ca-hospital1:/etc/hyperledger
+    container_name: ca.hospital
+    hostname: ca.hospital
+    networks:
+      - healthcare-nw1
+
+  ca_laboratory:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.laboratory
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=1020
+    ports:
+      - "1020:1020"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+    volumes:
+      - ../consortium/fabric-ca/laboratory:/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      # - /var/madhu/ca-hospital2:/etc/hyperledger
+    container_name: ca.laboratory
+    hostname: ca.laboratory
+    networks:
+      - healthcare-nw1
+
+  ca_pharmacy:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.pharmacy
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=1040
+    ports:
+      - "1040:1040"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+    volumes:
+      - ../consortium/fabric-ca/pharmacy:/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      # - /var/madhu/ca-hospital12:/etc/hyperledger
+    container_name: ca.pharmacy
+    hostname: ca.pharmacy
+    networks:
+      - healthcare-nw1
+
+  ca_ins-provider:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.ins-provider
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=1050
+    ports:
+      - "1050:1050"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+    volumes:
+      - ../consortium/fabric-ca/ins-provider:/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      # - /var/madhu/ca-hospital12:/etc/hyperledger
+    container_name: ca.ins-provider
+    hostname: ca.ins-provider
+    networks:
+      - healthcare-nw1
+
+  ca_orderer:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=1030
+    ports:
+      - "1030:1030"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ../consortium/fabric-ca/ordererOrg:/Users/deekshitdsouza/fabric-samples/bin/fabric-ca-server
+      # - /var/madhu/orderer:/var/hyperledger/production
+    container_name: ca_orderer
+    networks:
+      - healthcare-nw1
